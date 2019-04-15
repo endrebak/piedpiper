@@ -44,6 +44,9 @@ I wrote it to make it easier to debug complex chains of commands in my [PyRanges
 
 ## Help wanted
 
+- I would love to get rid of the locals() in the Debug constructor. Do you know
+  how to access the locals that existed at the time Debug() was called?
+
 ## More complex example
 
 Notice that `.join(exons.unstrand())` is considered one call as piedpiper only looks at the top level chains.
