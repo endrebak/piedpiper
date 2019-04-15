@@ -32,7 +32,7 @@ python examples/pp.py
 # AttributeError: 'str' object has no attribute 'i_will_error'
 ```
 
-I wrote it to make it easier to debug complex chains of commands in my (PyRanges package)["https://github.com/biocore-ntnu/pyranges"], but it should work on all kinds of data.
+I wrote it to make it easier to debug complex chains of commands in my [PyRanges package]("https://github.com/biocore-ntnu/pyranges"), but it should work on all kinds of data.
 
 ## Limitations/Disadvantages
 
