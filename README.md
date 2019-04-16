@@ -5,7 +5,7 @@ Context manager to debug method chains in Python.
 ```
 cat examples/pp.py
 # from piedpiper import Debug
-# with Debug(locals()):
+# with Debug():
 #     "abc".replace("a", "A").upper().lower().i_will_error().find("hi")
 python examples/pp.py
 # Start data:
@@ -22,7 +22,7 @@ python examples/pp.py
 #
 # .i_will_error()
 # Traceback (most recent call last):
-#   File "_pp.py", line 2, in <module>
+#   File "examples/pp.py", line 2, in <module>
 #     with Debug():
 #   File "/home/endrebak/code/piedpiper/piedpiper/main.py", line 112, in __init__
 #     _run_commands(commands, frame.lineno, frame.filename, _locals)
@@ -34,18 +34,23 @@ python examples/pp.py
 
 I wrote it to make it easier to debug complex chains of commands in my [PyRanges package](https://github.com/biocore-ntnu/pyranges), but it should work on all kinds of data.
 
+## Install
+
+```
+pip install piedpiper
+```
+
 ## Limitations/Disadvantages
 
 - You currently can only have one chain within the context.
 - It is largely unused and untested.
 - It only looks at the top level commands (most sensible, IMO), do not really want to extend this
 - It uses eval (to run code you were trying to run anyways).
-- nested context managers do not work yet
+- no support for nested context managers. Do not know if it would make sense anyways.
 
-## Help wanted
+## Thanks
 
-- I would love to get rid of the locals() in the Debug constructor. Do you know
-  how to access the locals that existed at the time Debug() was called?
+- Alassane Ndiaye (removing locals arg in constructor)
 
 ## More complex example
 
@@ -58,7 +63,7 @@ cat examples/exons.py
 # cpg = pr.data.cpg()
 #
 # from piedpiper import Debug as D
-# with D(locals()):
+# with D():
 #     cpg.join(exons.unstrand())[["CpG"]](lambda df: df.head(3))["chrX"].slack(500)
 python examples/exons.py
 # Start data:

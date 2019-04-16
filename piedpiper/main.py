@@ -134,22 +134,18 @@ def _run_commands(commands, start_line, source_file, _locals):
     print("[{}:{}]".format(source_file, start_line), file=sys.stderr)
 
 
-# def _find_var_name()
-
-
 class Debug:
     def __init__(self, _locals=None):
-        if _locals is None:
-            _locals = {}
         frames = inspect.stack()
 
         for frame in frames:
             line = frame.code_context[0]
             if "Debug" in line:
-                # self.filename = frame.filename
-                # self.lineno = frame.lineno
                 break
 
+        if not _locals:
+            _locals = frame.frame.f_locals
+        
         lines = _get_lines_in_block(frame.filename, frame.lineno)
 
         code = "".join(lines)
