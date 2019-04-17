@@ -2,7 +2,7 @@
 
 Context manager to debug method chains in Python.
 
-It is in an alpha state, but will get much attention from me in the immediate future as I desperately want something like this. Watch this space :)
+It is in an alpha state, but will get much attention from me in the immediate future as I desperately need it. Watch this space :)
 
 ```
 cat examples/pp.py
