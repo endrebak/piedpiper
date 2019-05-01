@@ -2,6 +2,8 @@
 
 Context manager to debug method chains in Python.
 
+It is in an alpha state, but will get much attention from me in the immediate future as I desperately need it. Watch this space :)
+
 ```
 cat examples/pp.py
 # from piedpiper import Debug
@@ -40,13 +42,13 @@ I wrote it to make it easier to debug complex chains of commands in my [PyRanges
 pip install piedpiper
 ```
 
-## Limitations/Disadvantages
+## TODO
 
-- You currently can only have one chain within the context.
-- It is largely unused and untested.
-- It only looks at the top level commands (most sensible, IMO), do not really want to extend this
-- It uses eval (to run code you were trying to run anyways).
-- no support for nested context managers. Do not know if it would make sense anyways.
+- use the standard library to parse the code to be debugged
+- support decomposing subcommands/subchains also
+- colorization based on level of nesting
+- add line numbers to each command 
+- IPython magic
 
 ## Thanks
 
