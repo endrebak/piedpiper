@@ -6,31 +6,49 @@ def _leading_spaces(l):
     return len(l) - len(l.lstrip(' '))
 
 
-def _get_lines_in_block(filename, line_nb):
+def _get_statement(filename, line_nb):
 
-    lines = []
     with open(filename) as f:
         for _ in range(line_nb):
             next(f)
 
         line = f.readline()
-        while line.strip().startswith("#"):
-            line = f.readline()
+        # keep reading while unclosed parentehis
 
-        first_line = line
-        first_leading_spaces = _leading_spaces(first_line)
-        lines.append(first_line)
+    return line
 
-        for line in f:
-            if line.strip().startswith("#"):
-                continue
-            if _leading_spaces(line) >= first_leading_spaces:
-                lines.append(line)
-            else:
-                break
 
-    return lines
+def _fix_square_brackets(commands):
 
+    new_commands = []
+    for command in commands:
+
+        paren_level = 0
+        bracket_level = 0
+        starts = []
+        for i, char in enumerate(command):
+            if char == "(":
+                paren_level += 1
+            elif char == ")":
+                paren_level -= 1
+            elif paren_level == 0 and char == "[":  # start
+                if bracket_level == 0:
+                    starts.append(i)
+                bracket_level += 1
+            elif char == "]" and bracket_level != 0:
+                bracket_level -= 1
+                if bracket_level == 0 and paren_level == 0:
+                    starts.append(i + 1)
+
+        last_i = None
+        for i in starts:
+            new_command = command[last_i:i]
+            if new_command:
+                new_commands.append(new_command)
+            last_i = i
+        new_commands.append(command[last_i:])
+
+    return new_commands
 
 def _parse_commands(code):
 
@@ -65,20 +83,13 @@ def _parse_commands(code):
         last_i = i
     commands.append(code[last_i:])
 
-    return commands
+    return _fix_square_brackets(commands)
 
 
 def _fix_square_brackets(commands):
 
     new_commands = []
     for command in commands:
-        # print(command)
-        # helplen = (int(len(command) / 10) + 1)
-        # for i in range(0, helplen):
-        #     print(str(i) * 10, end="")
-
-        # print("")
-        # print("1234567890" * helplen)
 
         paren_level = 0
         bracket_level = 0
@@ -145,7 +156,7 @@ class Debug:
 
         if not _locals:
             _locals = frame.frame.f_locals
-        
+
         lines = _get_lines_in_block(frame.filename, frame.lineno)
 
         code = "".join(lines)
@@ -161,3 +172,23 @@ class Debug:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
+
+def DBG():
+
+    frames = inspect.stack()
+
+    for frame in frames:
+        line = frame.code_context[0]
+        if "DBG" in line:
+            break
+
+    _locals = frame.frame.f_locals
+
+    lines = _get_statement(frame.filename, frame.lineno)
+
+    code = "".join(lines)
+
+    commands = _parse_commands(code)
+
+    _run_commands(commands, frame.lineno, frame.filename, _locals)
